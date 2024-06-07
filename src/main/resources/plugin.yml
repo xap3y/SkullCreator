@@ -1,0 +1,6 @@
+name: SkullCreator
+version: '${project.version}'
+main: eu.xap3y.skullcreator.Main
+api-version: '1.20'
+authors: [XAP3Y]
+website: xap3y.eu
