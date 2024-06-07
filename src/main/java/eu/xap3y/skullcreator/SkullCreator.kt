@@ -63,6 +63,30 @@ object SkullCreator {
     }
 
     /**
+     * Creates a player skull item with the skin based on a player's UUID using Mojang API.
+     *
+     * @param id The Player's UUID.
+     * @return The head of the Player.
+     */
+    @JvmStatic
+    fun itemFromUuidOnline(id: String): ItemStack? {
+        return itemWithUuidOnline(id)
+    }
+
+    /**
+     * Creates a player skull item with the skin based on a player's name using Mojang API.
+     *
+     * @param name The Player's name.
+     * @return The head of the Player.
+     */
+    @JvmStatic
+    fun itemFromNameOnline(name: String): ItemStack? {
+        if (name.length > 16) return null
+        val uuid: String = HttpUtils.getProfileUuid(name) ?: return null
+        return itemWithUuidOnline(uuid)
+    }
+
+    /**
      * Creates a player skull item with the skin at a Mojang URL.
      *
      * @param url The Mojang URL.
@@ -103,7 +127,7 @@ object SkullCreator {
     }
 
     /**
-     * Modifies a skull to use the skin of the player with a given UUID.
+     * Modifies a skull to use the skin of the offline player with a given UUID.
      *
      * @param item The item to apply the name to. Must be a player skull.
      * @param id   The Player's UUID.
@@ -117,6 +141,20 @@ object SkullCreator {
         item.setItemMeta(meta)
 
         return item
+    }
+
+    /**
+     * Modifies a skull to use the skin of the player with a given UUID.
+     *
+     * @param id   The Player's UUID.
+     * @return The head of the Player.
+     */
+    @JvmStatic
+    fun itemWithUuidOnline(id: String): ItemStack? {
+        val uuid: String = id.replace("-", "")
+        val texture = HttpUtils.getProfileTexture(uuid) ?: return null
+
+        return itemFromBase64(texture)
     }
 
     /**
