@@ -16,7 +16,8 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.*
 
-object Main {
+class Main {
+
     private var warningPosted = false
 
     // some reflection stuff to be used when setting a skull's profile
@@ -143,7 +144,7 @@ object Main {
         if (item.itemMeta !is SkullMeta) {
             return null
         }
-        val meta = item.itemMeta as SkullMeta?
+        val meta: SkullMeta = item.itemMeta as SkullMeta
         mutateItemMeta(meta, base64)
         item.setItemMeta(meta)
 
@@ -256,7 +257,7 @@ object Main {
         try {
             if (blockProfileField == null) {
                 blockProfileField = block.javaClass.getDeclaredField("profile")
-                blockProfileField.setAccessible(true)
+                blockProfileField?.setAccessible(true)
             }
             blockProfileField!![block] = makeProfile(b64)
         } catch (e: NoSuchFieldException) {
@@ -266,20 +267,20 @@ object Main {
         }
     }
 
-    private fun mutateItemMeta(meta: SkullMeta?, b64: String) {
+    private fun mutateItemMeta(meta: SkullMeta, b64: String) {
         try {
             if (metaSetProfileMethod == null) {
-                metaSetProfileMethod = meta!!.javaClass.getDeclaredMethod("setProfile", GameProfile::class.java)
-                metaSetProfileMethod.setAccessible(true)
+                metaSetProfileMethod = meta.javaClass.getDeclaredMethod("setProfile", GameProfile::class.java)
+                metaSetProfileMethod?.setAccessible(true)
             }
-            metaSetProfileMethod!!.invoke(meta, makeProfile(b64))
+            metaSetProfileMethod?.invoke(meta, makeProfile(b64))
         } catch (ex: NoSuchMethodException) {
             // if in an older API where there is no setProfile method,
             // we set the profile field directly.
             try {
                 if (metaProfileField == null) {
-                    metaProfileField = meta!!.javaClass.getDeclaredField("profile")
-                    metaProfileField.setAccessible(true)
+                    metaProfileField = meta.javaClass.getDeclaredField("profile")
+                    metaProfileField?.setAccessible(true)
                 }
                 metaProfileField!![meta] = makeProfile(b64)
             } catch (ex2: NoSuchFieldException) {
@@ -290,10 +291,10 @@ object Main {
         } catch (ex: IllegalAccessException) {
             try {
                 if (metaProfileField == null) {
-                    metaProfileField = meta!!.javaClass.getDeclaredField("profile")
-                    metaProfileField.setAccessible(true)
+                    metaProfileField = meta.javaClass.getDeclaredField("profile")
+                    metaProfileField?.setAccessible(true)
                 }
-                metaProfileField!![meta] = makeProfile(b64)
+                metaProfileField?.set(meta, makeProfile(b64))
             } catch (ex2: NoSuchFieldException) {
                 ex2.printStackTrace()
             } catch (ex2: IllegalAccessException) {
@@ -302,10 +303,10 @@ object Main {
         } catch (ex: InvocationTargetException) {
             try {
                 if (metaProfileField == null) {
-                    metaProfileField = meta!!.javaClass.getDeclaredField("profile")
-                    metaProfileField.setAccessible(true)
+                    metaProfileField = meta.javaClass.getDeclaredField("profile")
+                    metaProfileField?.setAccessible(true)
                 }
-                metaProfileField!![meta] = makeProfile(b64)
+                metaProfileField?.set(meta, makeProfile(b64))
             } catch (ex2: NoSuchFieldException) {
                 ex2.printStackTrace()
             } catch (ex2: IllegalAccessException) {
