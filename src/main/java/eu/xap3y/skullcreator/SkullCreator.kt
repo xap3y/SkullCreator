@@ -16,7 +16,7 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.*
 
-class SkullCreator {
+object SkullCreator {
 
     private var warningPosted = false
 
@@ -28,6 +28,7 @@ class SkullCreator {
     /**
      * Creates a player skull, should work in both legacy and new Bukkit APIs.
      */
+    @JvmStatic
     fun createSkull(): ItemStack {
         checkLegacy()
 
@@ -44,8 +45,9 @@ class SkullCreator {
      * @param name The Player's name.
      * @return The head of the Player.
      */
+    @JvmStatic
     @Deprecated("names don't make for good identifiers.")
-    fun itemFromName(name: String?): ItemStack {
+    fun itemFromName(name: String): ItemStack {
         return itemWithName(createSkull(), name)
     }
 
@@ -55,7 +57,8 @@ class SkullCreator {
      * @param id The Player's UUID.
      * @return The head of the Player.
      */
-    fun itemFromUuid(id: UUID?): ItemStack {
+    @JvmStatic
+    fun itemFromUuid(id: UUID): ItemStack {
         return itemWithUuid(createSkull(), id)
     }
 
@@ -65,7 +68,8 @@ class SkullCreator {
      * @param url The Mojang URL.
      * @return The head of the Player.
      */
-    fun itemFromUrl(url: String?): ItemStack? {
+    @JvmStatic
+    fun itemFromUrl(url: String): ItemStack? {
         return itemWithUrl(createSkull(), url)
     }
 
@@ -75,6 +79,7 @@ class SkullCreator {
      * @param base64 The Base64 string.
      * @return The head of the Player.
      */
+    @JvmStatic
     fun itemFromBase64(base64: String): ItemStack? {
         return itemWithBase64(createSkull(), base64)
     }
@@ -86,13 +91,12 @@ class SkullCreator {
      * @param name The Player's name.
      * @return The head of the Player.
      */
+    @JvmStatic
     @Deprecated("names don't make for good identifiers.")
-    fun itemWithName(item: ItemStack, name: String?): ItemStack {
-        notNull(item, "item")
-        notNull(name, "name")
+    fun itemWithName(item: ItemStack, name: String): ItemStack {
 
         val meta = item.itemMeta as SkullMeta?
-        meta!!.setOwner(name)
+        meta?.setOwner(name)
         item.setItemMeta(meta)
 
         return item
@@ -105,12 +109,11 @@ class SkullCreator {
      * @param id   The Player's UUID.
      * @return The head of the Player.
      */
-    fun itemWithUuid(item: ItemStack, id: UUID?): ItemStack {
-        notNull(item, "item")
-        notNull(id, "id")
+    @JvmStatic
+    fun itemWithUuid(item: ItemStack, id: UUID): ItemStack {
 
         val meta = item.itemMeta as SkullMeta?
-        meta!!.setOwningPlayer(Bukkit.getOfflinePlayer(id!!))
+        meta?.setOwningPlayer(Bukkit.getOfflinePlayer(id))
         item.setItemMeta(meta)
 
         return item
@@ -123,10 +126,8 @@ class SkullCreator {
      * @param url  The URL of the Mojang skin.
      * @return The head associated with the URL.
      */
-    fun itemWithUrl(item: ItemStack, url: String?): ItemStack? {
-        notNull(item, "item")
-        notNull(url, "url")
-
+    @JvmStatic
+    fun itemWithUrl(item: ItemStack, url: String): ItemStack? {
         return itemWithBase64(item, urlToBase64(url))
     }
 
@@ -137,9 +138,8 @@ class SkullCreator {
      * @param base64 The base64 string containing the texture.
      * @return The head with a custom texture.
      */
+    @JvmStatic
     fun itemWithBase64(item: ItemStack, base64: String): ItemStack? {
-        notNull(item, "item")
-        notNull(base64, "base64")
 
         if (item.itemMeta !is SkullMeta) {
             return null
@@ -157,13 +157,11 @@ class SkullCreator {
      * @param block The block to set.
      * @param name  The player to set it to.
      */
+    @JvmStatic
     @Deprecated("names don't make for good identifiers.")
-    fun blockWithName(block: Block, name: String?) {
-        notNull(block, "block")
-        notNull(name, "name")
-
+    fun blockWithName(block: Block, name: String) {
         val state = block.state as Skull
-        state.setOwningPlayer(Bukkit.getOfflinePlayer(name!!))
+        state.setOwningPlayer(Bukkit.getOfflinePlayer(name))
         state.update(false, false)
     }
 
@@ -173,13 +171,11 @@ class SkullCreator {
      * @param block The block to set.
      * @param id    The player to set it to.
      */
-    fun blockWithUuid(block: Block, id: UUID?) {
-        notNull(block, "block")
-        notNull(id, "id")
-
+    @JvmStatic
+    fun blockWithUuid(block: Block, id: UUID) {
         setToSkull(block)
         val state = block.state as Skull
-        state.setOwningPlayer(Bukkit.getOfflinePlayer(id!!))
+        state.setOwningPlayer(Bukkit.getOfflinePlayer(id))
         state.update(false, false)
     }
 
@@ -189,10 +185,8 @@ class SkullCreator {
      * @param block The block to set.
      * @param url   The mojang URL to set it to use.
      */
-    fun blockWithUrl(block: Block, url: String?) {
-        notNull(block, "block")
-        notNull(url, "url")
-
+    @JvmStatic
+    fun blockWithUrl(block: Block, url: String) {
         blockWithBase64(block, urlToBase64(url))
     }
 
@@ -202,10 +196,8 @@ class SkullCreator {
      * @param block  The block to set.
      * @param base64 The base64 to set it to use.
      */
+    @JvmStatic
     fun blockWithBase64(block: Block, base64: String) {
-        notNull(block, "block")
-        notNull(base64, "base64")
-
         setToSkull(block)
         val state = block.state as Skull
         mutateBlockState(state, base64)
@@ -225,13 +217,7 @@ class SkullCreator {
         }
     }
 
-    private fun notNull(o: Any?, name: String) {
-        if (o == null) {
-            throw NullPointerException("$name should not be null!")
-        }
-    }
-
-    private fun urlToBase64(url: String?): String {
+    private fun urlToBase64(url: String): String {
         val actualUrl: URI
         try {
             actualUrl = URI(url)
