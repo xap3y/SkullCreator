@@ -16,7 +16,7 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.*
 
-class Main {
+object SkullCreator {
 
     private var warningPosted = false
 
