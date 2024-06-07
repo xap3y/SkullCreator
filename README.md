@@ -53,6 +53,7 @@ dependencies {
 > [!NOTE]\
 > Same as the original [SkullCreator](https://github.com/deanveloper/SkullCreator) only except the new stuff below
 
+**You can look at some examples [here](https://github.com/xap3y/SkullCreator/tree/main/src/test)**
 
 ### By Name (Online)
 
