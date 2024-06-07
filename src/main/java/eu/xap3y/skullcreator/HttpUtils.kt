@@ -1,17 +1,11 @@
 package eu.xap3y.skullcreator
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-@Serializable
 data class MojangResponse(val id: String, val name: String)
-
-@Serializable
 data class MojangProfileProperty(val name: String, val value: String)
-
-@Serializable
 data class MojangProfile(val id: String, val name: String, val properties: List<MojangProfileProperty>)
 
 
@@ -28,7 +22,8 @@ internal class HttpUtils {
                 client.newCall(request).execute().use { response ->
                     return if (response.isSuccessful) {
                         val responseBody: String = response.body?.string() ?: return@use null
-                        Json.decodeFromString<MojangResponse>(responseBody).id
+                        val json = Gson().fromJson(responseBody, MojangResponse::class.java)
+                        json.id
                     } else {
                         null
                     }
@@ -48,7 +43,8 @@ internal class HttpUtils {
                 client.newCall(request).execute().use { response ->
                     return if (response.isSuccessful) {
                         val responseBody: String = response.body?.string() ?: return@use null
-                        Json.decodeFromString<MojangProfile>(responseBody).properties.firstOrNull()?.value
+                        val json = Gson().fromJson(responseBody, MojangProfile::class.java)
+                        json.properties.firstOrNull()?.value
                     } else {
                         null
                     }
