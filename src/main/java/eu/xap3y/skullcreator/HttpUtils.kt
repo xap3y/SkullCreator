@@ -1,14 +1,19 @@
 package eu.xap3y.skullcreator
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+@Serializable
 data class MojangResponse(val id: String, val name: String)
+
+@Serializable
 data class MojangProfileProperty(val name: String, val value: String)
+
+@Serializable
 data class MojangProfile(val id: String, val name: String, val properties: List<MojangProfileProperty>)
+
 
 internal class HttpUtils {
     companion object {
@@ -19,15 +24,17 @@ internal class HttpUtils {
                 .url("https://api.mojang.com/users/profiles/minecraft/$name")
                 .build()
 
-            return client.newCall(request).execute().use { response ->
-                return if (response.isSuccessful) {
-                    val responseBody: String = response.body?.string() ?: return@use null
-                    val mapper: ObjectMapper = jacksonObjectMapper()
-                    val mojangResponse: MojangResponse = mapper.readValue(responseBody)
-                    mojangResponse.id
-                } else {
-                    null
+            return try{
+                client.newCall(request).execute().use { response ->
+                    return if (response.isSuccessful) {
+                        val responseBody: String = response.body?.string() ?: return@use null
+                        Json.decodeFromString<MojangResponse>(responseBody).id
+                    } else {
+                        null
+                    }
                 }
+            } catch (e: Exception) {
+                null
             }
         }
 
@@ -37,15 +44,17 @@ internal class HttpUtils {
                 .url("https://sessionserver.mojang.com/session/minecraft/profile/$uuid")
                 .build()
 
-            return client.newCall(request).execute().use { response ->
-                return if (response.isSuccessful) {
-                    val responseBody: String = response.body?.string() ?: return@use null
-                    val mapper: ObjectMapper = jacksonObjectMapper()
-                    val profile: MojangProfile = mapper.readValue(responseBody)
-                    profile.properties.firstOrNull()?.value
-                } else {
-                    null
+            return try {
+                client.newCall(request).execute().use { response ->
+                    return if (response.isSuccessful) {
+                        val responseBody: String = response.body?.string() ?: return@use null
+                        Json.decodeFromString<MojangProfile>(responseBody).properties.firstOrNull()?.value
+                    } else {
+                        null
+                    }
                 }
+            } catch (e: Exception) {
+                null
             }
         }
     }
