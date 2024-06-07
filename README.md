@@ -16,7 +16,7 @@ First, add JitPack to your repositories
 <repository>
     <id>jitpack.io</id>
     <url>https://jitpack.io</url>
-  </repository>
+</repository>
 ```
 
 Then add this as dependency
@@ -25,7 +25,7 @@ Then add this as dependency
 <dependency>
     <groupId>com.github.xap3y</groupId>
     <artifactId>SkullCreator</artifactId>
-    <version>b3fa7232c18f71b9d5e105aa68087f3b8efcbd50</version>
+    <version>1.0</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -36,7 +36,15 @@ Then add this as dependency
 <details>
 <summary>Gradle</summary>
 
-#### Soon!
+```sql
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+             
+dependencies {
+    compileOnly "com.github.xap3y:SkullCreator:1.0"
+}
+```
 
 </details>
 
