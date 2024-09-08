@@ -5,47 +5,112 @@
 The only difference is that it is written in Kotlin, and allows you to get <br>
 head from name or UUID online (using MojangAPI)
 
-## Download
+## Installation
+
+[![Maven Central Version](https://img.shields.io/maven-central/v/eu.xap3y/skullcreator)](https://central.sonatype.com/artifact/eu.xap3y/skullcreator)
 
 <details>
 <summary>Maven</summary>
 
-First, add JitPack to your repositories
-
-```xml
-<repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-</repository>
-```
-
-Then add this as dependency
+### Add skullcreator as a dependency:
 
 ```xml
 <dependency>
-    <groupId>com.github.xap3y</groupId>
-    <artifactId>SkullCreator</artifactId>
+    <groupId>eu.xap3y</groupId>
+    <artifactId>skullcreator</artifactId>
     <version>1.0</version>
-    <scope>compile</scope>
 </dependency>
 ```
 
+### And shade it:
+
+```xml
+<plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <goals>
+                    <goal>shade</goal>
+                </goals>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>eu.xap3y.skullcreator</pattern>
+                            <!-- Replace your.package with your real package -->
+                            <shadedPattern>your.package.skullcreator</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+</plugins>
+```
 </details>
 
 
 <details>
-<summary>Gradle</summary>
+<summary>Gradle (Groovy) </summary>
 
-```sql
+### Add skullcreator as a dependency:
+
+```groovy
 repositories {
-    maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
-             
+
 dependencies {
-    compileOnly "com.github.xap3y:SkullCreator:1.0"
+    implementation 'eu.xap3y:skullcreator:1.0'
+}
+
+```
+
+### Don't forget to shadow it:
+
+```groovy
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+tasks {
+    shadowJar {
+        // Dont forget to replace 'your.package' with your package
+        relocate 'eu.xap3y.skullcreator', "your.package.skullcreator"
+    }
 }
 ```
 
+</details>
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+### Add skullcreator as a dependency:
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation("eu.xap3y:skullcreator:1.0")
+}
+```
+
+```kotlin
+plugins {
+    id("com.github.johnrengelman.shadow") version ("8.1.1")
+}
+
+tasks {
+    shadowJar {
+        relocate("eu.xap3y.skullcreator", "your.package.skullcreator")
+    }
+}
+```
 </details>
 
 ## Usage
