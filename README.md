@@ -119,7 +119,7 @@ tasks {
 > Same as the original [SkullCreator](https://github.com/deanveloper/SkullCreator) only except the new stuff below
 
 **You can look at some examples [here](https://github.com/xap3y/SkullCreator/tree/main/src/test)** \
-**Docs are available at [skullcreator.xap3y.eu](https://skullcreator.xap3y.eu)**
+**Docs are available at [skullcreator.xap3y.tech](https://skullcreator.xap3y.tech)**
 ### By Name (Online)
 
 `SkullCreator.itemFromNameOnline("XAP3Y")` returning `CompletableFuture<ItemStack>` <br>
